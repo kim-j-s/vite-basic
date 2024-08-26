@@ -1,0 +1,28 @@
+{
+  "name": "-markup-with-vite",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ],
+  "scripts": {
+    "dev": "vite",
+    "build:clean": "rimraf dist",
+    "build:vite": "vite build",
+    "build:format": "prettier ./dist --write --ignore-path .prettierignore",
+    "build": "npm run build:clean && npm run build:vite && npm run build:format"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.38",
+    "prettier": "^3.2.5",
+    "rimraf": "^5.0.5",
+    "sass": "^1.75.0",
+    "scss": "^0.2.4",
+    "vite": "^5.4.2",
+    "vite-plugin-handlebars": "^2.0.0"
+  }
+}

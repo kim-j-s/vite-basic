@@ -1,0 +1,46 @@
+@import 'value.scss';
+
+body {
+  background-color: $base-color;
+}
+.test {
+  &_test {
+    background: red;
+  }
+}
+
+* {
+  &::before {
+    content: '';
+    box-sizing: border-box;
+  }
+  &::after {
+    content: '';
+    box-sizing: border-box;
+  }
+}
+
+
+.bb {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin-top: 20px;
+  .i {
+    position: relative;
+    font-size: 0;
+    img {
+      display: block;
+      width: 100%;
+    }
+    .out {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100px;
+      background-color: rgba($color: #ddd, $alpha: 1.0);
+    }
+  }
+  
+}
