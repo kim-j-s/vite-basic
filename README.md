@@ -2,8 +2,7 @@
 
 ## 수정 사항
 
-- scss autoprefixer 작동 안함
-- build시 head의 css 경로 문제
+- scss sourcemap 비정상 작동
 
 ## npm scripts (npm run \*\*\*)
 
@@ -37,3 +36,8 @@
 - css
   - 빌드시 .css 파일 기준으로 파일이 생성
   - .css 파일 내에서는 scss가 동작 안하므로 현재 예제 처럼 .scss 파일을 .css파일에 import해서 .scss 파일내에서 작성
+
+## src 작성
+
+- pxtorem 설정상태
+- build 시 수동으로 link 경로 수정 가능 'crossorigin' 표기는 추가 보안
