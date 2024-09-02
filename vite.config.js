@@ -6,6 +6,7 @@ import path, { resolve } from 'path';
 // import helpers from './src/_helpers/index';
 
 import helpers from './src/web/pub/_helpers/index';
+import pxtorem from 'postcss-pxtorem'; // pxtorem 플러그인 가져오기
 
 // src 내 빌드 파일 엔트리(html, js, css) 만들기
 
@@ -58,15 +59,9 @@ console.log(getEntries('src'));
 export default defineConfig({
 // export default {
   root: 'src',
-  base: '/',
+  // base: '/',
   publicDir: '../public',
   // publicDir: path.resolve(__dirname, "src/web/pub/img"),
-  // assetsInclude: ['**/*.jpg', '**/*.png', '**/*.gif', '**/*.svg'],
-  resolve: {
-    alias: {
-      '@': path.resolve(__dirname, 'src'),
-    },
-  },
   build: {
     // outDir: '../dist',
     outDir: '../dist',
@@ -93,7 +88,6 @@ export default defineConfig({
       }
     }
   },
-  // assetsInclude: ['**/*.jpg', '**/*.png', '**/*.gif', '**/*.svg'],  
   plugins: [
     handlebars({
       // partialDirectory: resolve(__dirname, 'src/_partials'), //partials 경로 설정
@@ -111,31 +105,49 @@ export default defineConfig({
         return pageData[pagePath];
       },
       helpers, // helpers 등록
-      // html: {
-      //   inject: {
-      //     injectTo: 'head',
-      //     // HTML 수정: 경로 변경
-      //     inject: (html) => html
-      //     // .replace(/href="\/src\/web\/pub\/css\/(common|style)\.css"/g, 'href="/css/$1.css"')
-      //       .replace(/href="\/src\/web\/pub\/css\/(common|common)\.css"/g, 'href="/css/$1.css"')
-      //       .replace(/href="\/src\/web\/pub\/css\/(common|style)\.css"/g, 'href="/css/$1.css"'),
-      //       // .replace(/src="\/src\/web\/pub\/js\/(jquery-3\.7\.1|common)\.min\.js"/g, 'src="../../../../js/$1.min.js"'),
-      //   },
-      // },
     }),
+    {
+      name: 'html-transform', // 플러그인 이름
+      transformIndexHtml(html) {
+        // 여러 링크 태그의 href 속성 변경
+        return html
+          .replace(
+            /href="\/web\/pub\/css\/common\.css"/g,
+            'href="../../../../css/common.css"'
+          )
+          .replace(
+            /href="\/web\/pub\/css\/style\.css"/g,
+            'href="../../../../css/style.css"'
+          );
+      }
+    }
   ],
   css: {
-    // devSourcemap: true,
+    devSourcemap: true,
+    preprocessorOptions: {
+      scss: {
+        sourceMap: true, // SCSS 파일에 대한 Sourcemap 생성 활성화
+      },
+    },
     postcss: {
       plugins: [
-        autoprefixer()
+        // autoprefixer()
+        autoprefixer({
+          overrideBrowserslist: ['> 1%', 'last 2 versions', 'Firefox ESR'],
+        }),
+        // pxtorem 플러그인 추가 (build 시에만 적용)
+        ...(process.env.NODE_ENV === 'production'
+          ? [
+              pxtorem({
+                rootValue: 16, // 기준 root 폰트 크기
+                propList: ['*'], // 변환할 속성 목록
+                selectorBlackList: [], // 변환하지 않을 선택자 목록
+                minPixelValue: 2, // 변환할 최소 픽셀 값
+              }),
+            ]
+          : []), // 변경된 구간: build 시에만 pxtorem 적용
       ],
     },
-    // preprocessorOptions: {
-    //   scss: {
-    //     additionalData: '@import "@/styles/variables.scss";', // 필요한 SCSS 변수 또는 믹스인 임포트
-    //   }
-    // }
   },
   server: {
     open: '/web/pub/index.html',
